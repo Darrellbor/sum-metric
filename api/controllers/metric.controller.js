@@ -1,23 +1,26 @@
 const Storage = require("node-storage");
+const { validationResult } = require("express-validator");
 const singlyLinkedList = require("../utils/singlyLinkedList");
 
 const store = new Storage("../utils/metricVals.txt");
 
 module.exports.addMetricCtrl = (req, res, next) => {
-  const value = Math.round(req.params.key);
   let error;
 
-  if (!value || isNaN(value)) {
-    error = new Error("A numeric value is required!");
+  //error handling
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    error = new Error("Validation Failed");
     error.code = 400;
+    error.data = errors.array();
     return next(error);
   }
 
-//store.remove("metrics");
+  const value = Math.round(req.body.value);
 
   const metric = {
     date: new Date(),
-    value
+    value,
   };
 
   if (!store.get("metrics")) {
@@ -28,12 +31,44 @@ module.exports.addMetricCtrl = (req, res, next) => {
     const retrivedList = JSON.parse(store.get("metrics"));
     let linkedList = new singlyLinkedList();
     Object.assign(linkedList, retrivedList);
-    linkedList.add(metric);
+    linkedList.addFromFront(metric);
     store.put("metrics", JSON.stringify(linkedList));
   }
-  console.log(metric, store.get("metrics"));
 
-  res.status(201).json("Metric value sucessfully created");
+  res.status(201).json({ message: "Metric value sucessfully created" });
 };
 
-module.exports.fetchMetricCtrl = (req, res, next) => {};
+module.exports.fetchMetricCtrl = (req, res, next) => {
+  let error;
+
+  if (!store.get("metrics")) {
+    error = new Error(0);
+    error.code = 204;
+    return next(error);
+  }
+
+  const retrivedList = JSON.parse(store.get("metrics"));
+  let linkedList = new singlyLinkedList();
+  Object.assign(linkedList, retrivedList);
+
+  const ONE_HOUR = 60 * 60 * 1000;
+  const anHourAgo = Date.now() - ONE_HOUR;
+  let sum = 0;
+  let counter = 0;
+  let current = linkedList.head;
+
+  while (current.next) {
+    console.log(new Date(current.val.date).getTime() < anHourAgo);
+
+    if (new Date(current.val.date).getTime() < anHourAgo)
+      linkedList.removeFromIndex(counter);
+    else sum += current.val.value;
+
+    current = current.next;
+    counter++;
+  }
+
+  store.put("metrics", JSON.stringify(linkedList));
+
+  res.status(200).json({ sum, list: JSON.parse(store.get("metrics")) });
+};

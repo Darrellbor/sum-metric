@@ -19,12 +19,31 @@ class SinglyLinkedList {
       this.head = node;
       this.tail = this.head;
     } else {
-      this.tail.next = node;
+      let current = this.head;
+      while (current.next) {
+        current = current.next;
+      }
+      current.next = node;
       this.tail = node;
     }
 
     this.length++;
+    return this;
+  }
 
+  addFromFront(val) {
+    const node = new Node(val);
+
+    if (!this.head) {
+      this.head = node;
+      this.tail = this.head;
+    } else {
+      const oldHead = this.head;
+      this.head = node;
+      this.head.next = oldHead;
+    }
+
+    this.length++;
     return this;
   }
 
@@ -79,10 +98,9 @@ class SinglyLinkedList {
     previousNode.next = removed.next;
     this.length--;
 
+    console.log(removed);
     return removed;
   }
 }
 
 module.exports = SinglyLinkedList;
-
-
