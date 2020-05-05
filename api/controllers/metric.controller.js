@@ -70,5 +70,5 @@ module.exports.fetchMetricCtrl = (req, res, next) => {
 
   store.put("metrics", JSON.stringify(linkedList));
 
-  res.status(200).json({ sum, list: JSON.parse(store.get("metrics")) });
+  res.status(200).json({ sum });
 };
