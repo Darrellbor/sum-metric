@@ -50,6 +50,7 @@ module.exports.fetchMetricCtrl = (req, res, next) => {
   const retrivedList = JSON.parse(store.get("metrics"));
   let linkedList = new singlyLinkedList();
   Object.assign(linkedList, retrivedList);
+  const itemsToRemove = [];
 
   const ONE_HOUR = 60 * 60 * 1000;
   const anHourAgo = Date.now() - ONE_HOUR;
@@ -57,15 +58,18 @@ module.exports.fetchMetricCtrl = (req, res, next) => {
   let counter = 0;
   let current = linkedList.head;
 
-  while (current.next) {
-    console.log(new Date(current.val.date).getTime() < anHourAgo);
+  while (counter < linkedList.length) {
 
-    if (new Date(current.val.date).getTime() < anHourAgo)
-      linkedList.removeFromIndex(counter);
-    else sum += current.val.value;
+    if (new Date(current.val.date).getTime() > anHourAgo)
+      sum += current.val.value;
+    else itemsToRemove.push(counter);
 
     current = current.next;
     counter++;
+  }
+
+  for (let i = 0; i < itemsToRemove.length; i++) {
+    linkedList.removeFromIndex(itemsToRemove[i]);
   }
 
   store.put("metrics", JSON.stringify(linkedList));

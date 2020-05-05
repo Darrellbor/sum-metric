@@ -97,8 +97,7 @@ class SinglyLinkedList {
     const removed = previousNode.next;
     previousNode.next = removed.next;
     this.length--;
-
-    console.log(removed);
+    
     return removed;
   }
 }
