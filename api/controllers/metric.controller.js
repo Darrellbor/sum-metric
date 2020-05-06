@@ -2,7 +2,7 @@ const Storage = require("node-storage");
 const { validationResult } = require("express-validator");
 const singlyLinkedList = require("../utils/singlyLinkedList");
 
-const store = new Storage("./utils/metricVals.txt");
+const store = new Storage("./api/utils/metricVals.txt");
 
 module.exports.addMetricCtrl = (req, res, next) => {
   let error;
