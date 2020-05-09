@@ -6,6 +6,7 @@ const store = new Storage("./api/utils/metricVals.txt");
 
 module.exports.addMetricCtrl = (req, res, next) => {
   let error;
+  let key = req.params.key;
 
   //error handling
   const errors = validationResult(req);
@@ -21,6 +22,7 @@ module.exports.addMetricCtrl = (req, res, next) => {
   const metric = {
     date: new Date(),
     value,
+    key,
   };
 
   if (!store.get("metrics")) {
@@ -40,6 +42,7 @@ module.exports.addMetricCtrl = (req, res, next) => {
 
 module.exports.fetchMetricCtrl = (req, res, next) => {
   let error;
+  let key = req.params.key;
 
   if (!store.get("metrics")) {
     error = new Error(0);
@@ -59,10 +62,12 @@ module.exports.fetchMetricCtrl = (req, res, next) => {
   let current = linkedList.head;
 
   while (counter < linkedList.length) {
-
-    if (new Date(current.val.date).getTime() > anHourAgo)
-      sum += current.val.value;
-    else itemsToRemove.push(counter);
+    
+    if (key === current.val.key) {
+      if (new Date(current.val.date).getTime() > anHourAgo)
+        sum += current.val.value;
+      else itemsToRemove.push(counter);
+    }
 
     current = current.next;
     counter++;
