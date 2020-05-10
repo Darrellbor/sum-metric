@@ -1,6 +1,8 @@
+
+const path = require("path");
 const Storage = require("node-storage");
 const { validationResult } = require("express-validator");
-const singlyLinkedList = require("../utils/singlyLinkedList");
+const singlyLinkedList = require(path.join("..","utils","singlyLinkedList.js"));
 
 const store = new Storage("./api/utils/metricVals.txt");
 
