@@ -1,6 +1,6 @@
 const Storage = require("node-storage");
 const { validationResult } = require("express-validator");
-const singlyLinkedList = require("../utils/singlyLinkedList");
+const singlyLinkedList = require("./api/utils/singlyLinkedList");
 
 const store = new Storage("./api/utils/metricVals.txt");
 
