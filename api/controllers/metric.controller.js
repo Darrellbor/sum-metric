@@ -2,9 +2,7 @@
 const path = require("path");
 const Storage = require("node-storage");
 const { validationResult } = require("express-validator");
-const singlyLinkedList = require(path.join(__dirname,"..","utils","singlyLinkedList.js"));
-
-console.log(path.join(__dirname,"..","utils","singlyLinkedList.js"));
+const singlyLinkedList = require(path.join(__dirname, "singlyLinkedList.js"));
 
 const store = new Storage("./api/utils/metricVals.txt");
 
