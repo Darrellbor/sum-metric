@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 //middleware for routes
-app.use("/metric/v1", metric_routes);
+app.use("/", metric_routes);
 
 //custom error handler for all routes
 app.use((error, req, res, next) => {
