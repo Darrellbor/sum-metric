@@ -5,7 +5,7 @@ const cors = require("cors");
 const bodyParser = require("body-parser");
 const metric_routes = require("./api/routes/metric");
 
-app.set("port", process.env.PORT || 3400);
+app.set("port", (process.env.PORT || 3400));
 
 app.use(cors());
 
