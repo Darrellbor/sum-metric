@@ -4,7 +4,8 @@
   "description": "Build a lightweight metric logging and reporting service that sums metrics by time window for the most recent hour.",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js --ignore node_modules/",
+    "start": "node app.js",
+    "start.dev": "nodemon app.js --ignore node_modules/",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
