@@ -2,9 +2,9 @@
 const path = require("path");
 const Storage = require("node-storage");
 const { validationResult } = require("express-validator");
-const singlyLinkedList = require(path.join(__dirname, "singlyLinkedList.js"));
+const singlyLinkedList = require(path.join(__dirname, "utils", "singlyLinkedList.js"));
 
-const store = new Storage("./api/utils/metricVals.txt");
+const store = new Storage("./api/controllers/utils/metricVals.txt");
 
 module.exports.addMetricCtrl = (req, res, next) => {
   let error;
@@ -47,8 +47,8 @@ module.exports.fetchMetricCtrl = (req, res, next) => {
   let key = req.params.key;
 
   if (!store.get("metrics")) {
-    error = new Error(0);
-    error.code = 204;
+    error = new Error(`There are no values available for key ${key}`);
+    error.code = 404;
     return next(error);
   }
 
@@ -80,6 +80,12 @@ module.exports.fetchMetricCtrl = (req, res, next) => {
   }
 
   store.put("metrics", JSON.stringify(linkedList));
+
+  if (sum === 0) {
+    error = new Error(`There is no sum available for key ${key}`);
+    error.code = 404;
+    return next(error);
+  }
 
   res.status(200).json({ sum: sum });
 };
